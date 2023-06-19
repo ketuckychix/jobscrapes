@@ -11,7 +11,7 @@ if __name__ == "__main__":
     database="indeed")
     
     # Scrape data from Indeed.
-    jobTitle = "Software Engineer"
+    jobTitle = "Fund Manager"
     location = "Singapore"
     job_details, errors = indeedScrape(jobTitle, location, 2)
 
@@ -30,4 +30,3 @@ if __name__ == "__main__":
     logging.basicConfig(filename='errors.log', level=logging.DEBUG)
     for error in errors:
         logging.error(error)
-        
