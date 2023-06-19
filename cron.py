@@ -1,7 +1,6 @@
 import mysql.connector
 from db import DB
 from scrape import indeedScrape
-import logging
 
 if __name__ == "__main__":
     db = mysql.connector.connect(
@@ -27,6 +26,8 @@ if __name__ == "__main__":
         db.commit()
     
     # log the errors
-    logging.basicConfig(filename='errors.log', level=logging.DEBUG)
-    for error in errors:
-        logging.error(error)
+    
+    if errors:
+        raise Exception("Error happend: Refer to errors.log for more details.") 
+
+    

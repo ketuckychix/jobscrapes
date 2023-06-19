@@ -3,7 +3,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 from helpers import convertSalaryRange
+import logging
 
+logging.basicConfig(filename='errors.log', level=logging.DEBUG)
 def indeedScrape(jobTitle, location, pages):
     '''
     Creates a list of dictionaries containing job details from Indeed.
@@ -64,6 +66,7 @@ def indeedScrape(jobTitle, location, pages):
             # Prevent getting blocked by Indeed
             time.sleep(4)
         except Exception as e:
+            logging.error(str(e))
             page_errors.append(str(e))
 
     return cleaned_job_postings, page_errors
