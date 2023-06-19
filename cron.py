@@ -1,6 +1,7 @@
 import mysql.connector
 from db import DB
 from scrape import indeedScrape
+import logging
 
 if __name__ == "__main__":
     db = mysql.connector.connect(
@@ -12,8 +13,9 @@ if __name__ == "__main__":
     # Scrape data from Indeed.
     jobTitle = "Software Engineer"
     location = "Singapore"
-    job_details = indeedScrape(jobTitle, location, 2)
-    
+    job_details, errors = indeedScrape(jobTitle, location, 2)
+
+
     # Create a database object
     db_instance = DB(db)
     print(job_details)
@@ -23,3 +25,9 @@ if __name__ == "__main__":
             "jobs", "JobTitle, CompanyName, SalaryLower, SalaryUpper, JobLink", 
             f"'{detail['JobTitle']}', '{detail['CompanyName']}', {detail['SalaryLower']}, {detail['SalaryUpper']}, '{detail['JobLink']}'")
         db.commit()
+    
+    # log the errors
+    logging.basicConfig(filename='errors.log', level=logging.DEBUG)
+    for error in errors:
+        logging.error(error)
+        

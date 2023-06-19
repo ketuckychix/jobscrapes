@@ -5,6 +5,10 @@ import time
 from helpers import convertSalaryRange
 
 def indeedScrape(jobTitle, location, pages):
+    '''
+    Creates a list of dictionaries containing job details from Indeed.
+    Utilizes headless Chrome browser to scrape data.
+    '''
     options = Options()
     options.headless = False
     user_agent =  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36'
@@ -15,11 +19,13 @@ def indeedScrape(jobTitle, location, pages):
     jobTitle = jobTitle.replace(" ", "+")
     location = location.replace(" ", "+")
     cleaned_job_postings = []
-    try:
-        for page in range(pages):
+    # List to store errors for further degbugging.
+    page_errors = []
+    for page in range(pages):
+        try:
             # Specify the URL of the job search results page on Indeed
             page = page * 10
-            url = f'https://sg.indeed.com/jobs?q={jobTitle}&l={location}&start={page}&from=searchOnHP&vjk=f7612039dfd2bcef'
+            url = f'https://sg.indeed.com/jobs?q={jobTitle}&l={location}&start={page}&from=searchOnHP&vjk=905433ec4a09c937'
 
             # Open the URL in the browser
             driver.get(url)
@@ -55,10 +61,12 @@ def indeedScrape(jobTitle, location, pages):
 
             
             driver.quit()
-            time.sleep(3)
-    except:
-        pass
-    return cleaned_job_postings
+            # Prevent getting blocked by Indeed
+            time.sleep(4)
+        except Exception as e:
+            page_errors.append(str(e))
+
+    return cleaned_job_postings, page_errors
 
 
 if __name__ == "__main__":
